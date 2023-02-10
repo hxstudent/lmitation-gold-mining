@@ -1,0 +1,4 @@
+com\example\vueblog\mapper\BlogMapper.class
+com\example\vueblog\entity\Blog.class
+com\example\vueblog\service\BlogService.class
+com\example\vueblog\service\impl\BlogServiceImpl.class
