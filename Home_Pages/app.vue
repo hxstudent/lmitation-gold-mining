@@ -4,23 +4,17 @@
       <!-- 顶部tab -->
       <div id="top_tab">
         <a href="https://juejin.cn/" class="logo">
-          <img src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.svg" alt="稀土掘金" title="稀土掘金">
+          <img src="https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web/e08da34488b114bd4c665ba2fa520a31.svg"
+            alt="稀土掘金" title="稀土掘金">
         </a>
         <nav class="main_nav">
           <ul class="nav_list">
             <li class="main_nav_list">
               <ul class="phone-hide">
-                <li><a href="https://juejin.cn/">首页</a></li>
-                <li><a href="https://juejin.cn/">沸点</a></li>
-                <li><a href="https://juejin.cn/">课程</a></li>
-                <li><a href="https://juejin.cn/">直播</a></li>
-                <li><a href="https://juejin.cn/">活动</a></li>
-                <li><a href="https://juejin.cn/">竞赛</a></li>
-                <li><a href="https://juejin.cn/">商城</a></li>
-                <li><a href="https://juejin.cn/">App</a>
-                  <i class="count">800</i>
+                <li v-for="(topTab,index) in topTabInfo" v-bind:key="index">
+                  <a href="">{{ topTab.name }}</a>
+                  <i class="count" v-if="topTab.count">{{ topTab.count }}</i>
                 </li>
-                <li><a href="https://juejin.cn/">插件</a></li>
               </ul>
             </li>
           </ul>
@@ -29,35 +23,23 @@
 
       <div id="art_tab">
         <div class="tabList">
-          <a href="">综合</a>
-          <a href="">关注</a>
-          <a href="">后端</a>
-          <a href="">前端</a>
-          <a href="">Android</a>
-          <a href="">iOS</a>
-          <a href="">人工智能</a>
-          <a href="">开发工具</a>
-          <a href="">代码人生</a>
-          <a href="">阅读</a>
-          <a href="">标签管理</a>
+          <div class="tab_left"><a href="" v-for="(artTab,index) in artTabInfo" v-bind:key="index">{{ artTab.name }}</a>
+          </div>
+          <div class="tab-right">
+            <a href="">标签管理</a>
+          </div>
         </div>
+
       </div>
 
     </header>
     <main v-show="!isShow">
       <div id="art_tab2">
         <div class="tabList">
-          <a href="">综合</a>
-          <a href="">关注</a>
-          <a href="">后端</a>
-          <a href="">前端</a>
-          <a href="">Android</a>
-          <a href="">iOS</a>
-          <a href="">人工智能</a>
-          <a href="">开发工具</a>
-          <a href="">代码人生</a>
-          <a href="">阅读</a>
-          <a href="">标签管理</a>
+          <a href="" v-for="(artTab,index) in artTabInfo" v-bind:key="index">{{ artTab.name }}</a>
+          <div class="tab-right">
+            <a href="">标签管理</a>
+          </div>
         </div>
       </div>
     </main>
@@ -88,6 +70,17 @@ export default {
   }
 }
 </script>
+<script setup>
+const { data: topTab } = await useFetch('/api/info', {
+  pick: ['topTab']
+})
+const { data: artTab } = await useFetch('/api/info', {
+  pick: ['artTab']
+})
+const topTabInfo = topTab.value.topTab
+const artTabInfo = artTab.value.artTab
+console.log(topTabInfo)
+</script>
 
 <style lang="css">
 * {
@@ -108,6 +101,8 @@ body {
   font-size: 12px;
   background-color: #f4f5f5;
 }
+
+
 
 /* 顶部tab  */
 header {
@@ -156,8 +151,9 @@ header {
 }
 
 #top_tab nav.main_nav li.main_nav_list ul.phone-hide li {
+  position: relative;
   display: inline-block;
-  width: 52px;
+  margin: 0 10px;
   height: 60px;
   line-height: 60px;
   text-align: center;
@@ -167,9 +163,6 @@ header {
   color: #1e80ff;
 }
 
-#top_tab nav.main_nav li.main_nav_list ul.phone-hide li a {
-  position: relative;
-}
 
 #top_tab nav.main_nav li.main_nav_list ul.phone-hide li a::before {
   content: '';
@@ -189,15 +182,19 @@ header {
 
 #top_tab nav.main_nav li.main_nav_list ul.phone-hide li i {
   position: absolute;
-  top: 10px;
-  left: 555px;
-  background-color: #e60012;
-  height: 14px;
-  padding: 0 3px;
-  line-height: 14px;
+  top: 3px;
+  left: 10px;
+  z-index: 9;
+  white-space: nowrap;
+  padding: 3px 7px;
+  background-color: #ee502f;
+  border-radius: 50px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 18px;
+  transform: scale(.5);
+  line-height: 18px;
   color: #fff;
-  font-size: 12px;
-  border-radius: 7px;
 }
 
 #art_tab {
@@ -205,6 +202,7 @@ header {
   top: 60.5px;
   left: 0;
   right: 0;
+  display: flex;
   height: 46px;
   width: 100%;
   font-size: 14px;
@@ -234,17 +232,27 @@ header {
   display: flex;
   align-items: center;
   line-height: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 
 .tabList a {
   padding: 0 12px;
   line-height: 46px;
+  white-space: nowrap;
+  display: inline-block;
 }
 
-.tabList a:last-child {
+.tabList .tab_right {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.tabList .tab_left {
+  flex: 1;
+  display: inline-block;
 }
 </style>
 
